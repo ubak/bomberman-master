@@ -15,7 +15,7 @@ var FullGame = function(){
         down: phaser.input.keyboard.addKey(40),
 		left: phaser.input.keyboard.addKey(37),
 		right: phaser.input.keyboard.addKey(39),
-        shield: phaser.input.keyboard.addKey(48)
+        shield: phaser.input.keyboard.addKey(96)
     };
     
     this.wasd = {
@@ -45,7 +45,7 @@ var FullGame = function(){
         bala2 = new Bala(map);
         shield1 = new Shield();
         shield2 = new Shield(); 
-        player1 = new Player('player1',map.getPhysicsReference(), bala1, bala2);
-        player2 = new Player('player2',map.getPhysicsReference(), bala2, bala1);
+        player1 = new Player('player1',map.getPhysicsReference(), bala1, bala2, shield1);
+        player2 = new Player('player2',map.getPhysicsReference(), bala2, bala1, shield2);
     })();
 }

@@ -7,5 +7,7 @@ var Load = function(){
     phaser.load.image('bala', 'assets/bala.png');
     phaser.load.image('barraVida1', 'assets/barra vida.png');
     phaser.load.image('barraVida2', 'assets/barra vida 2.png');
+    phaser.load.image('shield1', 'assets/barrera.png');
+    phaser.load.image('shield2', 'assets/barrera2.png');
     phaser.load.tilemap('map', 'assets/mapa.json', null, Phaser.Tilemap.TILED_JSON);
 }

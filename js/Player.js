@@ -1,4 +1,4 @@
-var Player = function(p,map,balaPj,balaEnemigo){
+var Player = function(p,map,balaPj,balaEnemigo,shield){
     var vida = null;
     var speed = null;
     var radio = null;
@@ -10,14 +10,18 @@ var Player = function(p,map,balaPj,balaEnemigo){
     var reloadDelay = 200;
     var delay = 0;
     var barraVida = null;
-    var shield = null;
+    var active = false;
+    
+    
     phaser.physics.arcade.enable(map);
     
     this.update = function(teclas){
                 
         phaser.physics.arcade.collide(imagen, map);
         phaser.physics.arcade.overlap(imagen, balaEnemigo.getPhysicsReference(), onPlayerCollideWithBala, null, this);
-        phaser.physics.arcade.overlap(map, balaPj.getPhysicsReference(), onBalaCollideWithWalls, null, this);
+        phaser.physics.arcade.overlap(balaPj.getPhysicsReference(), map, onBalaCollideWithWalls, null, this);
+        if(active == true)phaser.physics.arcade.overlap(shield.getPhysicsReference(), balaEnemigo.getPhysicsReference(), onBalaCollideWithShield, null, this);
+        
         
         if (teclas.up.isDown){
             console.log("up");
@@ -36,19 +40,27 @@ var Player = function(p,map,balaPj,balaEnemigo){
         if (teclas.space.isDown && delay < phaser.time.now){
             delay = phaser.time.now + reloadDelay;
             balaPj.shoot(imagen.position.x, imagen.position.y, lastSideX, lastSideY,map);  
-        }else if(teclas.shield.isDown){
-            console.log("shield");
-            this.ativeShield();
         }
+        
+        if(teclas.shield.isDown){
+            console.log("shield");
+            active = true;
+        }else if(!teclas.shield.isDown){
+            console.log("!shield");
+            active = false;
+        }
+        shield.update(imagen.position.x, imagen.position.y, active);
     }
     
     var onPlayerCollideWithBala = function(imagen, bala){
         bala.kill();
         actualizarVida();
     }
-    var onBalaCollideWithWalls = function(map, bala){
+    var onBalaCollideWithShield = function(shield, bala){
         bala.kill();
-        console.warn(bala);
+    }
+    var onBalaCollideWithWalls = function(bala, map){
+        bala.kill();
     }
     
     var actualizarVida = function(){
@@ -84,11 +96,6 @@ var Player = function(p,map,balaPj,balaEnemigo){
         lastSideX = 1;
     }
     
-    this.activeShield = function(){
-        
-    }
-    
-        
     var enablePhysics = function() {        
         phaser.physics.arcade.enable(imagen);
         imagen.body.bounce.y = 0.2;
@@ -103,7 +110,6 @@ var Player = function(p,map,balaPj,balaEnemigo){
         if(p == 'player1')  imagen = phaser.add.sprite(900,720, p);
         if(p == 'player2')  barraVida = phaser.add.sprite(60, 700, 'barraVida1');
         if(p == 'player1')  barraVida = phaser.add.sprite(840, 700, 'barraVida2');
-        shield = new Shield()
         imagen.anchor.setTo(0.5 , 0.5);
         barraVida.anchor.setTo(0.5 , 0.5);
         delay = 600;
