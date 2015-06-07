@@ -3,6 +3,7 @@ var Bala = function(){
     var balas = null;
     var bala = null;
     var dmg = null;
+    var imagenExplo = null;
     
     
     this.shoot = function(x,y,lastSideX,lastSideY){
@@ -26,6 +27,10 @@ var Bala = function(){
     
     this.getDmg = function(){
         return dmg;
+    };
+    
+    this.explosion = function(x,y){
+        imagenExplo = phaser.add.sprite(x, y, 'explosion');
     };
     
     

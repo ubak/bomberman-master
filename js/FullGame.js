@@ -1,5 +1,5 @@
 var FullGame = function(){
-    
+     
     var map = null;
     var player1 = null;
     var player2 = null;
@@ -45,7 +45,7 @@ var FullGame = function(){
         bala2 = new Bala(map);
         shield1 = new Shield();
         shield2 = new Shield(); 
-        player1 = new Player('player1',map.getPhysicsReference(), bala1, bala2, shield1);
-        player2 = new Player('player2',map.getPhysicsReference(), bala2, bala1, shield2);
+        player1 = new Player('player1',map, bala1, bala2, shield1);
+        player2 = new Player('player2',map, bala2, bala1, shield2);
     })();
 }
