@@ -18,6 +18,7 @@ var FullGame = function(){
     var instruccionesActive = true;
     var time = null;
     var spikes = false;
+    var music = null;
     
     this.cursor = {
         space: phaser.input.keyboard.addKey(13),
@@ -38,19 +39,27 @@ var FullGame = function(){
     };
     
     this.update = function(){
-            player1.update(this.cursor);
-            player2.update(this.wasd);    
-            lableP2.text = 'X'+ player2.actualizarTexto().relojes + '       X' + player2.actualizarTexto().boostSpeed;
-            lableP1.text = player1.actualizarTexto().boostSpeed +'X       '+   player1.actualizarTexto().relojes+'X';
+        player1.update(this.cursor);
+        player2.update(this.wasd);    
+        lableP2.text = 'X'+ player2.actualizarTexto().relojes + '       X' + player2.actualizarTexto().boostSpeed;
+        lableP1.text = player1.actualizarTexto().boostSpeed +'X       '+   player1.actualizarTexto().relojes+'X';
            /* if(timer < phaser.time.now){
                 map.updateSpikes(spikes);
                 timer = phaser.time.now + 1000;
             }*/
+         
+        music.onLoop.add(this.playLevelMusic, this);   
+    };
+    
+    this.playLevelMusic = function() {
+	    music.play('', 0, 1, true);
     };
     
     var enablePhysics = function(){
         phaser.physics.startSystem(Phaser.Physics.ARCADE);
     };
+    
+    
     
      (function() {      
         enablePhysics();
@@ -69,6 +78,8 @@ var FullGame = function(){
         lableP2 = phaser.add.text(270, 735, text1, {font: '25px Arial', fill: '#f00', align: 'center'});
          instrucciones = phaser.add.sprite(0, 0, 'instrucciones');
         phaser.add.tween(instrucciones).to( { alpha: 1 }, 4000).to( { alpha: 0 }, 1000).start();
-        
+        music = phaser.add.audio('music');
+        music.loop = true;
+        music.play('', 0, 1, true);
     })();
 }

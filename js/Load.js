@@ -29,4 +29,6 @@ var Load = function(){
     phaser.load.image('instrucciones', 'assets/instrucciones.png');
     phaser.load.tilemap('map', 'assets/mapa.json', null, Phaser.Tilemap.TILED_JSON);
     phaser.load.tilemap('map2', 'assets/mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    
+    phaser.load.audio('music', 'assets/music.wav');
 }
