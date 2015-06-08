@@ -2,6 +2,8 @@ var Map = function(){
     var background = null;
     var map = null;
     var layer = null;
+   /* var map2 = null;
+    var layer2 = null;*/
     
     var relojes = null;
     var speedUp = null;
@@ -16,13 +18,19 @@ var Map = function(){
     
         
     this.getPhysicsReference = function() {
-        return {mapa: layer,fullmap: map, reloj: relojes.getPhysicsReference(), speedup: speedUp.getPhysicsReference(), rayo: rayos.getPhysicsReference(), corazon: corazones.getPhysicsReference()};  
+        return {mapa: layer,fullmap: map, /*fullmap2: layer2,*/ reloj: relojes.getPhysicsReference(), speedup: speedUp.getPhysicsReference(), rayo: rayos.getPhysicsReference(), corazon: corazones.getPhysicsReference()};  
     };
     
     this.destroyTiles = function(tile){
-        if(tile.index == 1) map.removeTile(tile.x,tile.y);        
+        if(tile.index == 1) map.removeTile(tile.x,tile.y); 
+        else if(tile.index == 3) map.putTile(1,tile.x,tile.y);
     };
-    
+   /* 
+    this.updateSpikes = function(spikes){
+        if(spikes == true) map2.swap(2,1);
+        else if(spikes == false)map2.swap(1,2);
+    };
+    */
     // Constructor
     (function() {        
         background = phaser.add.sprite(0,0, 'background'); 
@@ -40,10 +48,21 @@ var Map = function(){
         
         map = phaser.add.tilemap('map');
         map.addTilesetImage('tileset');
+        map.addTilesetImage('tileset3');
         layer = map.createLayer('Capa de Patrones 1');
         layer.resizeWorld();
         map.setCollision(1);
         map.setCollision(2);
+        map.setCollision(3);
+        
+        /*map2 = phaser.add.tilemap('map2');
+        map2.addTilesetImage('tileset2');
+        layer2 = map2.createLayer('Capa de Patrones 1');
+        layer2.resizeWorld();
+        //map2.setCollision(1);
+        //map2.setCollision(1);*/
+        
+        
         vida1 = phaser.add.sprite(180, 730, 'vida1');
         vida1.anchor.setTo(0.5,0.5);
         vida2 = phaser.add.sprite(730, 730, 'vida2'); 

@@ -14,6 +14,7 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
     var barraMana = null;
     var active = false;
     var map = fullmap.getPhysicsReference().mapa;
+ //   var map2 = fullmap.getPhysicsReference().fullmap2;
     var relojes = fullmap.getPhysicsReference().reloj;
     var speedUp = fullmap.getPhysicsReference().speedup;
     var corazon = fullmap.getPhysicsReference().corazon;
@@ -28,10 +29,13 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
     phaser.physics.arcade.enable(speedUp);
     phaser.physics.arcade.enable(rayo);
     phaser.physics.arcade.enable(corazon);
+  //  phaser.physics.arcade.enable(map2);
+    
     
     this.update = function(teclas){
         if(!isGameFinished){
             phaser.physics.arcade.collide(imagen, map);
+            //phaser.physics.arcade.overlap(imagen, map2, onPlayerCollideWithSpikes, null, this);
             phaser.physics.arcade.overlap(imagen, relojes, onPlayerCollideWithRelojes, null, this);
             phaser.physics.arcade.overlap(imagen, speedUp, onPlayerCollideWithBoostSpeed, null, this);
             phaser.physics.arcade.overlap(imagen, corazon, onPlayerCollideWithCorazon, null, this);
@@ -73,6 +77,13 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
     this.actualizarTexto = function(){
         return {relojes: relogesCogidos, boostSpeed: boostSpeedCogidos};
     }
+    
+  /*  var onPlayerCollideWithSpikes = function(imagen, tile){
+        console.warn(tile);
+        if(tile.index == 2){
+            actualizarVida(-1);
+        }
+    }*/
     
     var onPlayerCollideWithBala = function(imagen, bala){
         bala.kill();
@@ -147,30 +158,34 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
         imagen.body.velocity.y = -speed;
         lastSideY = -1;
         lastSideX = 0;
+        imagen.animations.play('up');
     }
     
     this.moveDown = function(){
         imagen.body.velocity.y = speed;
         lastSideY = 1;
         lastSideX = 0;
+        imagen.animations.play('down');
     }
     
     this.moveLeft = function(){
         imagen.body.velocity.x = -speed;
         lastSideY = 0;
         lastSideX = -1;
+        imagen.animations.play('left');
     }
     
     this.moveRight = function(){
         imagen.body.velocity.x = speed;
         lastSideY = 0;
         lastSideX = 1;
+        imagen.animations.play('right');
     }
     
     var enablePhysics = function() {        
         phaser.physics.arcade.enable(imagen);
-        imagen.body.bounce.y = 0.2;
-        imagen.body.collideWorldBounds = true;    
+        imagen.body.collideWorldBounds = true;   
+        imagen.body.setSize(30,35,0,10);
     };
     
     (function() {
@@ -178,12 +193,16 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
         mana = 100;
         speed = 100;
         radio = 15;
-        if(p == 'player2')  imagen = phaser.add.sprite(70,70, p);
-        if(p == 'player1')  imagen = phaser.add.sprite(830,650, p);
-        if(p == 'player2')  barraVida = phaser.add.sprite(60, 730, 'barraVida1');
-        if(p == 'player1')  barraVida = phaser.add.sprite(840, 730, 'barraVida2');
-        if(p == 'player2')  barraMana = phaser.add.sprite(60, 753, 'barraMana1');
-        if(p == 'player1')  barraMana = phaser.add.sprite(840, 753, 'barraMana2');
+        if(p == 'player_2')  imagen = phaser.add.sprite(70,70, p);
+        if(p == 'player_1')  imagen = phaser.add.sprite(830,650, p);
+        imagen.animations.add('down' ,[0,1,2],8);
+        imagen.animations.add('left' ,[3,4,5],8);
+        imagen.animations.add('right' ,[6,7,8],8);
+        imagen.animations.add('up' ,[9,10,11],8);
+        if(p == 'player_2')  barraVida = phaser.add.sprite(60, 730, 'barraVida1');
+        if(p == 'player_1')  barraVida = phaser.add.sprite(840, 730, 'barraVida2');
+        if(p == 'player_2')  barraMana = phaser.add.sprite(60, 753, 'barraMana1');
+        if(p == 'player_1')  barraMana = phaser.add.sprite(840, 753, 'barraMana2');
         imagen.anchor.setTo(0.5 , 0.5);
         barraVida.anchor.setTo(0.5 , 0.5);
         barraMana.anchor.setTo(0.5 , 0.5);
