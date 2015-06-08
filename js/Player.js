@@ -16,18 +16,26 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
     var map = fullmap.getPhysicsReference().mapa;
     var relojes = fullmap.getPhysicsReference().reloj;
     var speedUp = fullmap.getPhysicsReference().speedup;
+    var corazon = fullmap.getPhysicsReference().corazon;
+    var rayo = fullmap.getPhysicsReference().rayo;
     var isGameFinished = false;
     var outOfmana = false;
+    var relogesCogidos = null;
+    var boostSpeedCogidos = null;
     
-    phaser.physics.arcade.enable(map);
+    
     phaser.physics.arcade.enable(relojes);
     phaser.physics.arcade.enable(speedUp);
+    phaser.physics.arcade.enable(rayo);
+    phaser.physics.arcade.enable(corazon);
     
     this.update = function(teclas){
         if(!isGameFinished){
             phaser.physics.arcade.collide(imagen, map);
             phaser.physics.arcade.overlap(imagen, relojes, onPlayerCollideWithRelojes, null, this);
             phaser.physics.arcade.overlap(imagen, speedUp, onPlayerCollideWithBoostSpeed, null, this);
+            phaser.physics.arcade.overlap(imagen, corazon, onPlayerCollideWithCorazon, null, this);
+            phaser.physics.arcade.overlap(imagen, rayo, onPlayerCollideWithRayo, null, this);
             phaser.physics.arcade.overlap(imagen, balaEnemigo.getPhysicsReference(), onPlayerCollideWithBala, null, this);
             phaser.physics.arcade.overlap(balaPj.getPhysicsReference(), map, onBalaCollideWithWalls, null, this);
             if(active == true)phaser.physics.arcade.overlap(shield.getPhysicsReference(), balaEnemigo.getPhysicsReference(), onBalaCollideWithShield, null, this);
@@ -50,10 +58,10 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
 
             if(teclas.shield.isDown && outOfmana == false){
                 active = true;
-                actualizarMana();
+                actualizarMana(0);
             }else if(!teclas.shield.isDown){
                 active = false;
-                actualizarMana();
+                actualizarMana(0);
             }
             shield.update(imagen.position.x, imagen.position.y, active);
         }
@@ -62,19 +70,36 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
         }
     }
     
+    this.actualizarTexto = function(){
+        return {relojes: relogesCogidos, boostSpeed: boostSpeedCogidos};
+    }
+    
     var onPlayerCollideWithBala = function(imagen, bala){
         bala.kill();
-        actualizarVida();
+        actualizarVida(-1);
     }
     
     var onPlayerCollideWithRelojes = function(imagen, reloj){
         reloj.kill();
+        relogesCogidos ++;
+        console.log(relogesCogidos);
         actualizarReload();
     } 
     
     var onPlayerCollideWithBoostSpeed = function(imagen, speedUp){
         speedUp.kill();
+        boostSpeedCogidos ++;
         actualizarSpeed();
+    }
+    
+    var onPlayerCollideWithCorazon = function(imagen, corazon){
+        corazon.kill();
+        actualizarVida(1);
+    }
+    
+    var onPlayerCollideWithRayo = function(imagen, rayo){
+        rayo.kill();
+        actualizarMana(1);
     }
         
     var onBalaCollideWithShield = function(shield, bala){
@@ -85,16 +110,20 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
         fullmap.destroyTiles(map);
     }
     
-    var actualizarVida = function(){
-        vida -= balaEnemigo.getDmg();
+    var actualizarVida = function(mode){
+        if(mode == -1) vida -= balaEnemigo.getDmg();
+        if(mode == 1) vida += 20;
+        if(vida >= 100) vida = 100;
         barraVida.scale.setTo(vida/100,1);
         if (vida <= 0){
             isGameFinished = true;
         }
     }
-    var actualizarMana = function(){
+    var actualizarMana = function(mode){
         if(active == true)mana -= 1;
-        if(active == false && mana <= 100) mana *= 1.01;
+        /*if(active == false && mana < 100) mana += 0.2;*/
+        if(mode == 1) mana += 50;
+        if(mana >= 100) mana = 100;
         barraMana.scale.setTo(mana/100,1);
         if (mana <= 0){
             outOfmana = true
@@ -158,6 +187,8 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
         imagen.anchor.setTo(0.5 , 0.5);
         barraVida.anchor.setTo(0.5 , 0.5);
         barraMana.anchor.setTo(0.5 , 0.5);
+        relogesCogidos = 0;
+        boostSpeedCogidos = 0;
         
         enablePhysics();
     })();

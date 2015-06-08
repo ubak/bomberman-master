@@ -8,7 +8,13 @@ var FullGame = function(){
     var barraVida1 = null;
     var barraVida2 = null;
     var shield1 = null;
-    var shield2
+    var shield2 = null;
+ 
+    var text1 = null;
+    var lableP1 = null;
+    var text2 = null;
+    var lableP2 = null;
+    
     this.cursor = {
         space: phaser.input.keyboard.addKey(13),
 		up: phaser.input.keyboard.addKey(38),
@@ -31,7 +37,10 @@ var FullGame = function(){
         
         player1.update(this.cursor);
         player2.update(this.wasd);    
-    }
+        lableP2.text = 'X'+ player2.actualizarTexto().relojes + '       X' + player2.actualizarTexto().boostSpeed;
+        lableP1.text = player1.actualizarTexto().boostSpeed +'X       '+   player1.actualizarTexto().relojes+'X';
+        
+    };
     
     var enablePhysics = function(){
         phaser.physics.startSystem(Phaser.Physics.ARCADE);
@@ -39,7 +48,7 @@ var FullGame = function(){
     
      (function() {      
         enablePhysics();
-        
+        timer = phaser.time.now + 1200;
         map = new Map();
         bala1 = new Bala(map);
         bala2 = new Bala(map);
@@ -47,5 +56,11 @@ var FullGame = function(){
         shield2 = new Shield(); 
         player1 = new Player('player1',map, bala1, bala2, shield1);
         player2 = new Player('player2',map, bala2, bala1, shield2);
+        text2 = 'X'+ player1.actualizarTexto().relojes + '       X' + player1.actualizarTexto().boostSpeed;
+        text1 =  player2.actualizarTexto().relojes +'X       '+   player2.actualizarTexto().boostSpeed+'X';
+       
+        lableP1 = phaser.add.text(520, 735, text2, {font: '25px Arial', fill: '#f00', align: 'center'});
+        lableP2 = phaser.add.text(270, 735, text1, {font: '25px Arial', fill: '#f00', align: 'center'});
+        
     })();
 }
