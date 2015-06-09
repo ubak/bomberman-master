@@ -93,7 +93,6 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
     var onPlayerCollideWithRelojes = function(imagen, reloj){
         reloj.kill();
         relogesCogidos ++;
-        console.log(relogesCogidos);
         actualizarReload();
     } 
     
