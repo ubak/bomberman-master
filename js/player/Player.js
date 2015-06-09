@@ -57,7 +57,7 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
 
             if (teclas.space.isDown && delay < phaser.time.now){
                 delay = phaser.time.now + reloadDelay;
-                balaPj.shoot(imagen.position.x, imagen.position.y, lastSideX, lastSideY,map);  
+                if(!isGameFinished) balaPj.shoot(imagen.position.x, imagen.position.y, lastSideX, lastSideY,map);  
             }
 
             if(teclas.shield.isDown && outOfmana == false){
@@ -70,6 +70,8 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
             shield.update(imagen.position.x, imagen.position.y, active);
         }
         else{
+            this.moveIdle();
+            imagen.kill();
             alert("GAME FINISHED");
         }
     }
@@ -148,10 +150,11 @@ var Player = function(p,fullmap,balaPj,balaEnemigo,shield){
     var actualizarSpeed = function(){
         speed += 20;
     }
-        
-    this.moveIdle = function(){
-       imagen.body.velocity.y = 0;
-       imagen.body.velocity.x = 0;
+   this.moveIdle = function(){
+       if(imagen != null){
+           imagen.body.velocity.y = 0;
+           imagen.body.velocity.x = 0;
+       }
     }
     this.moveUP = function(){
         imagen.body.velocity.y = -speed;
